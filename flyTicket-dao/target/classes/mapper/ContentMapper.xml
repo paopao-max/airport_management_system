@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafuc.mapper.ContentMapper">
+    
+    <resultMap id="ContentResultMap" type="com.cafuc.pojo.Content">
+        <id property="contentId" column="content_id"/>
+        <result property="describe" column="describe"/>
+        <result property="picture" column="picture"/>
+        <result property="url" column="url"/>
+    </resultMap>
+    
+    <!-- 添加广告 -->
+    <insert id="addContent" parameterType="com.cafuc.pojo.Content">
+        INSERT INTO content (content_id, `describe`, picture, url)
+        VALUES (#{contentId}, #{describe}, #{picture}, #{url})
+    </insert>
+    
+    <!-- 删除广告 -->
+    <delete id="deleteContent">
+        DELETE FROM content WHERE content_id = #{contentId}
+    </delete>
+    
+    <!-- 更新广告 -->
+    <update id="updateContent" parameterType="com.cafuc.pojo.Content">
+        UPDATE content
+        <set>
+            <if test="describe != null and describe != ''">`describe` = #{describe},</if>
+            <if test="picture != null and picture != ''">picture = #{picture},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+        </set>
+        WHERE content_id = #{contentId}
+    </update>
+    
+    <!-- 根据ID查询广告 -->
+    <select id="getContentById" resultMap="ContentResultMap">
+        SELECT * FROM content WHERE content_id = #{contentId}
+    </select>
+    
+    <!-- 查询所有广告 -->
+    <select id="getAllContents" resultMap="ContentResultMap">
+        SELECT * FROM content
+    </select>
+    
+</mapper>

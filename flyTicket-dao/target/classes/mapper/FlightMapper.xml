@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafuc.mapper.FlightMapper">
+    
+    <resultMap id="FlightResultMap" type="com.cafuc.pojo.Flight">
+        <id property="flightId" column="flight_id"/>
+        <result property="flightNumber" column="flight_number"/>
+        <result property="flightStartPlace" column="flight_start_place"/>
+        <result property="flightEndPlace" column="flight_end_place"/>
+        <result property="flightStartAirport" column="flight_start_airport"/>
+        <result property="flightEndAirport" column="flight_end_airport"/>
+        <result property="flightStartTime" column="flight_start_time"/>
+        <result property="flightEndTime" column="flight_end_time"/>
+        <result property="flightHighPrice" column="flight_high_price"/>
+        <result property="flightMiddlePrice" column="flight_middle_price"/>
+        <result property="flightBasePrice" column="flight_base_price"/>
+        <result property="flightHighNumber" column="flight_high_number"/>
+        <result property="flightMiddleNumber" column="flight_middle_number"/>
+        <result property="flightBaseNumber" column="flight_base_number"/>
+        <result property="flightType" column="flight_type"/>
+    </resultMap>
+    
+    <!-- 添加航班 -->
+    <insert id="addFlight" parameterType="com.cafuc.pojo.Flight">
+        INSERT INTO flight (
+            flight_id, flight_number, flight_start_place, flight_end_place,
+            flight_start_airport, flight_end_airport, flight_start_time,
+            flight_end_time, flight_high_price, flight_middle_price,
+            flight_base_price, flight_high_number, flight_middle_number,
+            flight_base_number, flight_type
+        ) VALUES (
+            #{flightId}, #{flightNumber}, #{flightStartPlace}, #{flightEndPlace},
+            #{flightStartAirport}, #{flightEndAirport}, #{flightStartTime},
+            #{flightEndTime}, #{flightHighPrice}, #{flightMiddlePrice},
+            #{flightBasePrice}, #{flightHighNumber}, #{flightMiddleNumber},
+            #{flightBaseNumber}, #{flightType}
+        )
+    </insert>
+    
+    <!-- 删除航班 -->
+    <delete id="deleteFlight">
+        DELETE FROM flight WHERE flight_id = #{flightId}
+    </delete>
+    
+    <!-- 更新航班 -->
+    <update id="updateFlight" parameterType="com.cafuc.pojo.Flight">
+        UPDATE flight
+        <set>
+            <if test="flightNumber != null and flightNumber != ''">flight_number = #{flightNumber},</if>
+            <if test="flightStartPlace != null and flightStartPlace != ''">flight_start_place = #{flightStartPlace},</if>
+            <if test="flightEndPlace != null and flightEndPlace != ''">flight_end_place = #{flightEndPlace},</if>
+            <if test="flightStartAirport != null and flightStartAirport != ''">flight_start_airport = #{flightStartAirport},</if>
+            <if test="flightEndAirport != null and flightEndAirport != ''">flight_end_airport = #{flightEndAirport},</if>
+            <if test="flightStartTime != null">flight_start_time = #{flightStartTime},</if>
+            <if test="flightEndTime != null">flight_end_time = #{flightEndTime},</if>
+            <if test="flightHighPrice != null">flight_high_price = #{flightHighPrice},</if>
+            <if test="flightMiddlePrice != null">flight_middle_price = #{flightMiddlePrice},</if>
+            <if test="flightBasePrice != null">flight_base_price = #{flightBasePrice},</if>
+            <if test="flightHighNumber != null">flight_high_number = #{flightHighNumber},</if>
+            <if test="flightMiddleNumber != null">flight_middle_number = #{flightMiddleNumber},</if>
+            <if test="flightBaseNumber != null">flight_base_number = #{flightBaseNumber},</if>
+            <if test="flightType != null and flightType != ''">flight_type = #{flightType},</if>
+        </set>
+        WHERE flight_id = #{flightId}
+    </update>
+    
+    <!-- 根据ID查询航班 -->
+    <select id="getFlightById" resultMap="FlightResultMap">
+        SELECT * FROM flight WHERE flight_id = #{flightId}
+    </select>
+    
+    <!-- 根据航班号查询航班 -->
+    <select id="getFlightByNumber" resultMap="FlightResultMap">
+        SELECT * FROM flight WHERE flight_number = #{flightNumber}
+    </select>
+    
+    <!-- 查询所有航班 -->
+    <select id="getAllFlights" resultMap="FlightResultMap">
+        SELECT * FROM flight ORDER BY flight_start_time ASC
+    </select>
+    
+    <!-- 条件查询航班 -->
+    <select id="searchFlights" parameterType="com.cafuc.pojo.Flight" resultMap="FlightResultMap">
+        SELECT * FROM flight
+        <where>
+            <if test="flightStartPlace != null and flightStartPlace != ''">
+                AND flight_start_place LIKE CONCAT('%', #{flightStartPlace}, '%')
+            </if>
+            <if test="flightEndPlace != null and flightEndPlace != ''">
+                AND flight_end_place LIKE CONCAT('%', #{flightEndPlace}, '%')
+            </if>
+            <if test="flightStartTime != null">
+                AND DATE(flight_start_time) = DATE(#{flightStartTime})
+            </if>
+            <if test="flightNumber != null and flightNumber != ''">
+                AND flight_number LIKE CONCAT('%', #{flightNumber}, '%')
+            </if>
+        </where>
+        ORDER BY flight_start_time ASC
+    </select>
+    
+    <!-- 分页查询航班 -->
+    <select id="getFlightsByPage" resultMap="FlightResultMap">
+        SELECT * FROM flight ORDER BY flight_start_time ASC
+        LIMIT #{start}, #{pageSize}
+    </select>
+    
+    <!-- 获取航班总数 -->
+    <select id="getFlightCount" resultType="int">
+        SELECT COUNT(*) FROM flight
+    </select>
+    
+    <!-- 更新航班座位数 -->
+    <update id="updateFlightSeats">
+        UPDATE flight
+        <set>
+            <if test="grade == '1'">
+                flight_high_number = flight_high_number - #{number}
+            </if>
+            <if test="grade == '2'">
+                flight_middle_number = flight_middle_number - #{number}
+            </if>
+            <if test="grade == '3'">
+                flight_base_number = flight_base_number - #{number}
+            </if>
+        </set>
+        WHERE flight_id = #{flightId}
+    </update>
+    
+</mapper>

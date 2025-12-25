@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafuc.mapper.AdminMapper">
+    
+    <resultMap id="AdminResultMap" type="com.cafuc.pojo.Admin">
+        <id property="adminId" column="admin_id"/>
+        <result property="adminName" column="admin_name"/>
+        <result property="adminPwd" column="admin_pwd"/>
+        <result property="adminEmail" column="admin_email"/>
+        <result property="adminPhone" column="admin_phone"/>
+    </resultMap>
+    
+    <!-- 根据用户名和密码查询管理员 -->
+    <select id="findAdminByNameAndPwd" resultMap="AdminResultMap">
+        SELECT * FROM admin
+        WHERE admin_name = #{adminName} AND admin_pwd = #{adminPwd}
+    </select>
+    
+    <!-- 根据ID查询管理员 -->
+    <select id="findAdminById" resultMap="AdminResultMap">
+        SELECT * FROM admin WHERE admin_id = #{adminId}
+    </select>
+    
+    <!-- 添加管理员 -->
+    <insert id="addAdmin" parameterType="com.cafuc.pojo.Admin">
+        INSERT INTO admin (admin_id, admin_name, admin_pwd, admin_email, admin_phone)
+        VALUES (#{adminId}, #{adminName}, #{adminPwd}, #{adminEmail}, #{adminPhone})
+    </insert>
+    
+    <!-- 更新管理员信息 -->
+    <update id="updateAdmin" parameterType="com.cafuc.pojo.Admin">
+        UPDATE admin
+        <set>
+            <if test="adminName != null and adminName != ''">admin_name = #{adminName},</if>
+            <if test="adminPwd != null and adminPwd != ''">admin_pwd = #{adminPwd},</if>
+            <if test="adminEmail != null and adminEmail != ''">admin_email = #{adminEmail},</if>
+            <if test="adminPhone != null and adminPhone != ''">admin_phone = #{adminPhone},</if>
+        </set>
+        WHERE admin_id = #{adminId}
+    </update>
+    
+    <!-- 删除管理员 -->
+    <delete id="deleteAdmin">
+        DELETE FROM admin WHERE admin_id = #{adminId}
+    </delete>
+    
+</mapper>

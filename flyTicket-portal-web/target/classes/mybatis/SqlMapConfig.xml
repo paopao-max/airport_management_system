@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 配置全局参数 -->
+    <settings>
+        <!-- 使用jdbc的getGeneratedKeys获取数据库自增主键值 -->
+        <setting name="useGeneratedKeys" value="true"/>
+        
+        <!-- 使用列别名替换列名 -->
+        <setting name="useColumnLabel" value="true"/>
+        
+        <!-- 开启驼峰命名转换 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    
+    <!-- 别名配置 -->
+    <typeAliases>
+        <typeAlias type="com.cafuc.pojo.Flight" alias="Flight"/>
+        <typeAlias type="com.cafuc.pojo.User" alias="User"/>
+        <typeAlias type="com.cafuc.pojo.Order" alias="Order"/>
+        <typeAlias type="com.cafuc.pojo.Admin" alias="Admin"/>
+        <typeAlias type="com.cafuc.pojo.Discuss" alias="Discuss"/>
+        <typeAlias type="com.cafuc.pojo.Content" alias="Content"/>
+    </typeAliases>
+    
+    <!-- 加载mapper文件 -->
+    <mappers>
+        <mapper resource="mapper/FlightMapper.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/OrderMapper.xml"/>
+        <mapper resource="mapper/AdminMapper.xml"/>
+        <mapper resource="mapper/DiscussMapper.xml"/>
+        <mapper resource="mapper/ContentMapper.xml"/>
+    </mappers>
+</configuration>

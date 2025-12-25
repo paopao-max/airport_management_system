@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cafuc.mapper.OrderMapper">
+    
+    <resultMap id="OrderResultMap" type="com.cafuc.pojo.Order">
+        <id property="orderId" column="order_id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="flightId" column="flight_id"/>
+        <result property="flightNumber" column="flight_number"/>
+        <result property="passengerName" column="passenger_name"/>
+        <result property="passengerId" column="passenger_id"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="grade" column="grade"/>
+        <result property="price" column="price"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="orderStatus" column="order_status"/>
+    </resultMap>
+    
+    <!-- 添加订单 -->
+    <insert id="addOrder" parameterType="com.cafuc.pojo.Order">
+        INSERT INTO `order` (
+            order_id, order_number, user_id, user_name, flight_id, flight_number,
+            passenger_name, passenger_id, contact_name, contact_phone,
+            grade, price, order_date, order_status
+        ) VALUES (
+            #{orderId}, #{orderNumber}, #{userId}, #{userName}, #{flightId}, #{flightNumber},
+            #{passengerName}, #{passengerId}, #{contactName}, #{contactPhone},
+            #{grade}, #{price}, #{orderDate}, #{orderStatus}
+        )
+    </insert>
+    
+    <!-- 删除订单 -->
+    <delete id="deleteOrder">
+        DELETE FROM `order` WHERE order_id = #{orderId}
+    </delete>
+    
+    <!-- 更新订单 -->
+    <update id="updateOrder" parameterType="com.cafuc.pojo.Order">
+        UPDATE `order`
+        <set>
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="flightId != null and flightId != ''">flight_id = #{flightId},</if>
+            <if test="flightNumber != null and flightNumber != ''">flight_number = #{flightNumber},</if>
+            <if test="passengerName != null and passengerName != ''">passenger_name = #{passengerName},</if>
+            <if test="passengerId != null and passengerId != ''">passenger_id = #{passengerId},</if>
+            <if test="contactName != null and contactName != ''">contact_name = #{contactName},</if>
+            <if test="contactPhone != null and contactPhone != ''">contact_phone = #{contactPhone},</if>
+            <if test="grade != null and grade != ''">grade = #{grade},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+        </set>
+        WHERE order_id = #{orderId}
+    </update>
+    
+    <!-- 根据ID查询订单 -->
+    <select id="getOrderById" resultMap="OrderResultMap">
+        SELECT * FROM `order` WHERE order_id = #{orderId}
+    </select>
+    
+    <!-- 根据订单号查询订单 -->
+    <select id="getOrderByNumber" resultMap="OrderResultMap">
+        SELECT * FROM `order` WHERE order_number = #{orderNumber}
+    </select>
+    
+    <!-- 根据用户ID查询订单 -->
+    <select id="getOrdersByUserId" resultMap="OrderResultMap">
+        SELECT * FROM `order` WHERE user_id = #{userId} ORDER BY order_date DESC
+    </select>
+    
+    <!-- 根据用户名查询订单 -->
+    <select id="getOrdersByUserName" resultMap="OrderResultMap">
+        SELECT * FROM `order` WHERE user_name = #{userName} ORDER BY order_date DESC
+    </select>
+    
+    <!-- 查询所有订单 -->
+    <select id="getAllOrders" resultMap="OrderResultMap">
+        SELECT * FROM `order` ORDER BY order_date DESC
+    </select>
+    
+    <!-- 分页查询订单 -->
+    <select id="getOrdersByPage" resultMap="OrderResultMap">
+        SELECT * FROM `order` ORDER BY order_date DESC
+        LIMIT #{start}, #{pageSize}
+    </select>
+    
+    <!-- 获取订单总数 -->
+    <select id="getOrderCount" resultType="int">
+        SELECT COUNT(*) FROM `order`
+    </select>
+    
+    <!-- 更新订单状态 -->
+    <update id="updateOrderStatus">
+        UPDATE `order` SET order_status = #{orderStatus} WHERE order_id = #{orderId}
+    </update>
+    
+</mapper>
